@@ -36,7 +36,7 @@ app.put("/tasks/:id", (req, res) => {
     let id = parseInt(req.params.id);
     let nuevo_estado = req.body.completed;
     let task = tasks.find((t) => t.id === id);
-    if (task) {Ñ
+    if (task) {
         task.completed = nuevo_estado;
         return res.status(200).json(task);
     } else {
