@@ -4,65 +4,47 @@ const port = 3000;
 
 app.use(express.json());
 
-//Datos de prueba
-let videojuegos = [
-  {
-    id: 1,
-    nombre: "The Legend of Zelda: Breath of the Wild",
-    genero: "Aventura",
-    plataforma: "Nintendo Switch",
-    precio: 59.99
-  },
-  {
-    id: 2,
-    nombre: "God of War",
-    genero: "Acción",
-    plataforma: "PlayStation 4",
-    precio: 39.99
-  },
-  {
-    id: 3,
-    nombre: "Halo Infinite",
-    genero: "Shooter",
-    plataforma: "Xbox Series X",
-    precio: 49.99
-  },
+//API DE TAREAS
+
+let tasks = [
+    { id: 1, title: "Organizar la casas", completed: true },
+    { id: 2, title: "Pasear el perro", completed: true },
+    { id: 3, title: "Hacer la compra", completed: false },
+    { id: 4, title: "Preparar el almuerzo", completed: false },
+    { id: 5, title: "Recoger pedido", completed: false },
+
 ];
 
-app.get("/", (req, res) => {
-  return res.json(videojuegos);
+// Obtener todas las tareas
+app.get("/tasks", (req, res) => {
+    return res.json(tasks);
 });
 
-app.get("/mis-videojuegos", (req, res) => {
-  return res.json([videojuegos[0], videojuegos[1], videojuegos[2]]);
+// Crear una nueva tarea
+app.post("/tasks", (req, res) => {
+    let newTask = {
+        id: tasks.length + 1,
+        title: req.body.title,
+        completed: false
+    };
+    tasks.push(newTask);
+    res.status(201).json(newTask);
 });
 
-app.post("/guardar-juego", (req, res) => {
-  let nuevoJuego = {
-    id: videojuegos.length + 1,
-    titulo: req.body.titulo,
-    precio: req.body.precio,
-    genero: req.body.genero,
-    plataforma: req.body.plataforma
-  };
-  videojuegos.push(nuevoJuego);
-  return res.status(200).json(nuevoJuego);
-});
-
-app.put("/actualizar-precio/:id", (req, res) => {
-  let id = parseInt(req.params.id);
-    let nuevoPrecio = req.body.precio;
-    let juego = videojuegos.find((j) => j.id === id);
-    if (juego) {
-      juego.precio = nuevoPrecio;
-      return res.status(200).json(juego);
+// Actualizar una tarea existente
+app.put("/tasks/:id", (req, res) => {
+    let id = parseInt(req.params.id);
+    let nuevo_estado = req.body.completed;
+    let task = tasks.find((t) => t.id === id);
+    if (task) {Ñ
+        task.completed = nuevo_estado;
+        return res.status(200).json(task);
     } else {
-      return res.status(404).json({ mensaje: "Juego no encontrado" });
+        res.status(404).json({ message: "Tarea no encontrada" });
     };
 });
 
 
-
 app.listen(port, () => {
-  console.log(`Servidor escuchando en http://localhost:${port}`);
+    console.log(`Servidor escuchando en http://localhost:${port}`);
 });
